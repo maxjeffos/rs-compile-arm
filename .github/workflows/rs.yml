@@ -1,0 +1,27 @@
+name: Build
+
+on: [push]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Show environment
+      run: cargo --version
+
+    - name: Run checks
+      run: cargo fmt -- --check
+
+    - name: Run tests
+      run: cargo test --verbose
+
+    - name: Add target
+      run: rustup target add aarch64-unknown-linux-gnu
+
+    - name: Build for ARM Linux
+      run: cargo build --release --target aarch64-unknown-linux-gnu
