@@ -30,3 +30,12 @@ jobs:
 
     - name: Build for ARM Linux
       run: cargo build --release --target aarch64-unknown-linux-gnu
+
+    - name: Create GitHub Release
+      run: | 
+        tag_name=dev-$(echo ${GITHUB_SHA} | cut -c1-8)
+        git tag $tag_name
+        gh release create $tag_name
+        gh release upload --prerelease $tag_name ./target/aarch64-unknown-linux-gnu/release/rs-compile-arm
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
